@@ -1,0 +1,274 @@
+.container {
+
+  height: 100dvh;
+  width:100vw ;
+  background-color: orange;
+  padding: 2px;
+  background: url('../assets/images/milieu.jpg'); /* L'URL de l'image de fond */
+ 
+  background-size:cover;
+  background-position: -15px 40px;
+
+
+
+
+ 
+
+}
+
+.center{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.entete{
+  
+   width: 100vw;
+  height: 15dvh;
+  padding-top: 20px;
+ align-items: center;
+  display: flex;
+ 
+
+}
+
+.bienvenue{
+  width: 30vw;
+  height: 80px;
+ 
+  color: red;
+  font-size: 25px;
+  font-weight: 1000;
+  z-index: 10;
+  
+  display: inline-block;
+  z-index: 5;
+
+}
+
+
+.ordinateur{
+  width: 40vw;
+  height: 80px;
+  display: inline;
+  z-index: 5;
+  border-bottom-right-radius: 100px;
+  position: relative;
+  left: -50px;
+  z-index: 1;
+}
+
+
+.rotation{
+  transform: rotateZ(-45deg);
+}
+
+.droit{
+  display: flex;
+
+}
+
+.informatique{
+  padding-left: 5px;
+}
+
+.dg{
+  display: flex;
+
+ 
+}
+
+.propose{
+  
+ 
+  padding: 3px;
+  display: inline-block; /* Permet d'ajuster la largeur au texte */
+  white-space: nowrap;  /* Empêche le retour à la ligne */
+}
+
+.alaka{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+ 
+ 
+ 
+  margin-left:5px ;
+  
+  font-size: 35px;
+  color: blue;
+}
+
+.div_propose{
+  display: flex;
+  align-items: center;
+ 
+  position: relative;
+  left: -50px;
+}
+
+
+
+
+.div_titre{
+ 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+ 
+
+  padding-left: 35%;
+  transform: rotateZ(-20deg);
+  position: relative;
+  top: 20px;
+ 
+}
+
+.liberez{
+  background-color: green;
+}
+.profitez{
+  background-color: white;
+  width: 60px;
+  height: 60px;
+  border: solid green 3px;
+  color: blue;
+  border-radius: 50%;
+  font-weight: 500;
+
+}
+.meilleure{
+  background-color: yellow;
+}
+
+.div_domaine{
+  
+  height: 27dvh;
+  display: flex;
+  justify-content: flex-end;
+  padding-right:3px;
+
+}
+
+.domaine{
+ 
+   transform: rotateZ(-20deg);
+  height: 25dvh;
+  width: 40%;
+  
+}
+
+.domaine_titre{
+  display: flex;
+  padding-left: 1px;
+  color: red;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  white-space: nowrap;
+  font-weight: 800;
+}
+
+.domaine_element{
+  display: flex;
+  padding-left: 30px;
+  color: blue;
+  display: flex;
+  align-items: center;
+  
+  
+ 
+
+}
+
+
+
+.div_domaine2{
+  
+  height: 23dvh;
+  display: flex;
+  justify-content: space-between;
+  padding-right:-2px;
+  transform: rotateZ(-2deg);
+  padding-top: 20px;
+  position: relative;
+  left: 20px;
+  
+ 
+}
+
+
+.domaine2{
+ 
+  padding-right: 4px;
+}
+
+
+.domaine02{
+  padding-top: 40px;
+  padding-left: 10px;
+  color: green;
+  font-weight: 1000;
+}
+
+.numero{
+  padding-top: 20px;
+  
+  font-size: 20px;
+}
+
+.icon_image{
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+
+.div_prix{
+  width: 100vw;
+  height: 25dvh;
+  background-color: green;
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  grid-template-rows: repeat(4, auto);
+  gap: 5px;
+  align-items: center;
+  justify-items: center;
+  border:solid green 5px;
+  
+  
+}
+
+.bloc{
+  background-color:white;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: blue;
+
+}
+
+.red{
+  color: red;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

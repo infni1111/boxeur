@@ -1,0 +1,96 @@
+
+/*
+
+
+const bleu_jolie = "#0C70F2"
+const gris_jolie = "#F0F1F2"
+
+
+*/
+
+
+.div_disc{
+	display: flex;
+	flex-direction: column;
+}
+
+.div_entete_disc{
+
+
+	height: 7dvh;
+
+	display: flex;
+	align-items: center;
+	gap:10px;
+	padding-left: 5px;
+}
+
+
+.img_entete_disc{
+	width: 45px;
+	height: 45px;
+	border-radius: 50%;
+}
+
+
+.div_milieu_disc{
+	
+	height: 85dvh;
+	border:solid blue 1px;
+	overflow-y: auto;
+
+}
+
+
+.div_bottom_disc{
+
+	min-height: 7dvh;
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	padding: 5px;
+	
+
+}
+
+.div_icon_disc{
+
+	width: 30vw;
+	height: 50px;
+	display: flex;
+	justify-content: space-around;
+	align-items: flex-end;
+
+}
+
+.div_message_disc{
+	
+	display: flex;
+	justify-content: flex-end;
+	align-items: flex-end;
+	width: 70vw;
+	min-height: 7dvh;
+	
+}
+
+.input{
+	display: flex;
+	background-color: #F0F1F2;
+	min-height: 6dvh;
+	min-width: 50vw;
+	max-width: 50vw;
+	word-break: break-word;
+	
+	border-radius: 20px;
+	margin-right: 10px;
+	padding-left: 7px;
+	padding-top: 7px;
+
+
+}
+
+.send{
+	
+	display: flex;
+	align-items: flex-end;
+}

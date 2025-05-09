@@ -1,0 +1,153 @@
+
+
+/*
+const bleu_jolie = "#0C70F2"
+const gris_jolie = "#F0F1F2"
+*/
+
+
+
+.style_container{
+	background-color: green;
+}
+
+
+.container_entete_accueil{
+
+	
+	height: 7dvh;
+	width: 100%;
+
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-left: 2%;
+	padding-right: 2%;
+	
+
+}
+
+
+.text_entete{
+
+	color: red;
+	font-size: 20px;
+
+}
+
+
+.div_icon{
+	display: flex;
+
+	width: 20vw;
+	justify-content: space-between;
+}
+
+
+.div_profile{
+	display: flex;
+
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: fit-content;
+	padding:2px;
+}
+
+
+.div_profile2{
+	display: flex;
+
+	
+	justify-content: center;
+	align-items: center;
+	width: fit-content;
+	padding:2px;
+	gap:10px;
+}
+
+.image{
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+}
+
+.container_friend{
+	
+
+	padding-left: 5px;
+	height: 12dvh;
+
+}
+
+.div_friendlist{
+	
+	height: 12dvh;
+	display: flex;
+	overflow-x: auto;
+	gap:20px;
+	font-size: 15px;
+	box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1) ;
+	box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.1) ;
+	
+
+}
+
+
+.container_milieu{
+	padding-left: 40px;
+
+}
+.div_accueillist{
+
+	height: 71dvh;
+	overflow-y: auto;
+	box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1) ;
+	box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.1) ;
+	padding-left: 20px;
+	padding-top: 30px;
+
+
+	
+}
+
+
+.div_milieu_accueil{
+	
+	height: 83dvh;
+}
+
+
+.div_bottom_accueil{
+	
+	height: 10dvh;
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	box-shadow: 1px -3px 2px rgba(0, 0, 0, 0.1) ;
+	box-shadow: -1px -3px 2px rgba(0, 0, 0, 0.1) ;
+}
+
+.link_bottom{
+	
+	display: flex;
+	flex-direction: column;
+	width: fit-content;
+	align-items: center;
+}
+
+.text_bottom{
+	font-size: 20px;
+	color: #0C70F2;
+}
+
+
+
+
+
+
+
+
+
+
+

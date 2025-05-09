@@ -1,0 +1,78 @@
+
+
+
+
+.style_container_form{
+
+	
+	width: 100vw;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	
+	color: blue;
+}
+
+
+.form{
+	background-color: #FFFEDF;
+}
+
+.margin{
+	margin: 10px;
+	margin-left: 5px;
+}
+
+
+
+.div_age{
+	
+}
+
+
+.div_name{
+	
+}
+
+
+.div_ethnie{
+	
+}
+
+
+.div_sex{
+	
+}
+
+.sex{
+	margin-right: 10px;
+}
+
+
+
+
+
+.div_submit{
+	
+	justify-content: center;
+	display: flex;
+}
+
+
+.button{
+	background-color: yellow;
+	height: 30px;
+	width: 100px;
+}
+
+
+
+.button:hover{
+	background-color: blue;
+}
+
+
+
+

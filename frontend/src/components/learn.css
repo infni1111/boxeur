@@ -1,0 +1,70 @@
+
+
+.div_container_learn{
+font-family: cursive;
+}
+
+
+.div_table{
+	
+	padding: 20px;
+	padding-left: 30px;
+
+}
+
+
+.div_titre_table{
+	
+}
+
+.numero_titre{
+	color: red;
+}
+
+.titre_table_principale{
+	color: red;
+	padding-left: 5px;
+
+
+	padding-bottom: 20px;
+	padding-top: 20px;
+}
+
+
+
+.titre_table_secondaire{
+	color: blue;
+	padding-left: 5px;
+	margin: 5px;
+
+	
+}
+
+
+.div_intro_crypto{
+	padding: 10px;
+}
+
+
+.text_intro_crypto{
+	
+	padding-left: 5vw;
+}
+
+
+.def{
+	color: blue;
+
+	
+}
+
+
+h3{
+	
+	color: red;
+	text-align: center;
+}
+
+.text_aes{
+	padding-left: 10vw;
+}
