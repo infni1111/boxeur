@@ -1,4 +1,6 @@
 //avant commit 0 frontend
+
+console.log("infni")
 import React ,{useContext} from 'react'
 
 import {AppContext} from './components/AppProvider'

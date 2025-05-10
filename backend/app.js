@@ -1,5 +1,5 @@
 
-//avant commit0 backend
+//deuxieme  commit backend
 import Fastify from 'fastify'
 
 import fastifyPosgres from '@fastify/postgres'
@@ -12,11 +12,16 @@ const fastify = Fastify({
 })
 
 
+import fastifyPostgres from '@fastify/postgres';
 
-fastify.register(fastifyPosgres,{
-  connectionString: 'postgres://admin:admin@localhost:5433/db',
+fastify.register(fastifyPostgres, {
+  connectionString: 'postgresql://postgres:mQytSFYzZdemCjBBZQOtBPNZyoQBJfLP@metro.proxy.rlwy.net:25357/railway',
+  ssl: {
+    rejectUnauthorized: false
+  },
   max:10000,
 });
+
 
 
 // Vérifiez la connexion PostgreSQL après le démarrage du serveur
@@ -33,9 +38,12 @@ fastify.ready(async (err) => {
 
 async function create_users_table(){
 
+  console.log("level0")
+
    const client = await fastify.pg.connect()
 
- 
+   console.log("level1")
+
   try{
 
 
@@ -69,7 +77,7 @@ async function create_users_table(){
 
     await client.query(createTableQuery)
 
-    //console.log("la création de la table users a été un succes : ")
+    console.log("la création de la table users a été un succes : ")
 
 
 
@@ -429,6 +437,34 @@ async function dropTable(){
 
 }
 
+//vérification des colonnes de la table users
+
+
+ async function check_column(){
+
+  const client = await fastify.pg.connect()
+
+try{
+  const query_check_column = `SELECT column_name, data_type, is_nullable, column_default
+FROM information_schema.columns
+WHERE table_name = 'users';`
+
+const result = await client.query(query_check_column)
+
+console.log("result : ",result.rows)
+
+return result.rows[0]
+
+}catch(error){
+
+  console.log("erreur survenue dans check_column : ",error)
+
+}finally{
+  client.release()
+}
+
+}
+
 
 
 
@@ -445,7 +481,7 @@ async function dropTable(){
 
 setTimeout(async ()=>{
 
-await dropTable()
+//await dropTable()
 
 await create_users_table()
 
@@ -466,8 +502,8 @@ setTimeout(async ()=>{
 
   console.log("voici la table users : ",users_db)
 },1000)
-
 */
+
 
 
 //ajout d'un user 
@@ -522,7 +558,9 @@ setTimeout(async ()=>{
 
   console.log("voici les users : ",result)
 },1000)
+
 */
+
 
 
 
@@ -570,6 +608,14 @@ setTimeout(async()=>{
 */
 
 
+//Check des colonnes
+
+
+/*
+setTimeout(async ()=>{
+  check_column()
+},3000)
+*/
 
 
 //Stockage des relations userID --- socket.id 
@@ -806,11 +852,13 @@ const send_pending_message =async (user_id,sid,data)=>{
     
     if(user_current){
 
-      console.log("sauvegarde profile reussie : ",newProfile)
+      console.log("sauvegarde profile reussie : ")
 
       //envoie du user_current aux autres clients
 
       const users = await get_users()
+
+      console.log("level1")
 
       //console.log("users.length dans register : ",Object.values(users[0]).length)
 

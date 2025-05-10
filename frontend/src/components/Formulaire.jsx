@@ -118,7 +118,7 @@ const handleSubmit=async (e)=>{
 
 
 
-    socket.timeout(1000).emit("register",dataForServer,async(err,dataForClient)=>{
+    socket.timeout(5000).emit("register",dataForServer,async(err,dataForClient)=>{
 
         console.log("dataForClient : ",dataForClient)
         if(err){
