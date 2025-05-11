@@ -1,5 +1,5 @@
 
-//deuxieme  commit backend
+//troisième commit  commit backend
 import Fastify from 'fastify'
 
 import fastifyPosgres from '@fastify/postgres'
@@ -11,23 +11,24 @@ const fastify = Fastify({
 
 })
 
-
 import fastifyPostgres from '@fastify/postgres';
 
 fastify.register(fastifyPostgres, {
-  connectionString: 'postgresql://postgres:mQytSFYzZdemCjBBZQOtBPNZyoQBJfLP@metro.proxy.rlwy.net:25357/railway',
-  ssl: {
-    rejectUnauthorized: false
-  },
-  max:10000,
+  connectionString: 'postgresql://postgres.kyjjpspcaqjptqcoclod:Toujourstravailler1@aws-0-us-east-2.pooler.supabase.com:5432/postgres',
+  
 });
 
 
-
 // Vérifiez la connexion PostgreSQL après le démarrage du serveur
-fastify.ready(async (err) => {
-  
-
+fastify.ready().then(() => {
+  const client = fastify.pg;
+  client.query('SELECT NOW()', (err, result) => {
+    if (err) {
+      console.error('Erreur de connexion à la base :', err);
+    } else {
+      console.log('Connexion réussie à la base :', result.rows);
+    }
+  });
 });
 
 
@@ -51,11 +52,12 @@ async function create_users_table(){
 
     const resultExist = await client.query(queryExist)
 
+    /*
     if(resultExist.rows[0].exists){
       console.log("cette table exist et ne peut pas etre crée : ")
       return
     }
-
+    */
 
   
 
@@ -423,7 +425,7 @@ async function dropTable(){
 
     await client.query(dropQuery)
 
-    //console.log("la supression de la table users a été un succes : ")
+    console.log("la supression de la table users a été un succes : ")
 
 
   }catch(error){
@@ -472,22 +474,16 @@ return result.rows[0]
 
 //creation de la tabler users 
 
-
-
-
-
-
-
-
+/*
 setTimeout(async ()=>{
 
 //await dropTable()
 
 await create_users_table()
 
-},1000)
+},5000)
 
-
+*/
 
 
 
