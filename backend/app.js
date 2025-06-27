@@ -370,6 +370,11 @@ setTimeout(async()=>{
 
 //Stockage des relations userID --- socket.id 
 
+
+const dico = {
+  "name":"virus"
+}
+
 let userSocketMap = new Map();
 
     // Initialiser Socket.IO avec le serveur HTTP standard
@@ -401,13 +406,13 @@ io.on('connection',async (socket)=>{
 
     userSocketMap.set(user_id,sid)
     
-    //console.log("voici le userSocketMap : ",userSocketMap)
+    console.log("voici le userSocketMap : ",userSocketMap)
   
   }
 
 
   socket.on("virus",(message,callback)=>{
-    console.log("voici le message du client : ",message)
+    //console.log("voici le message du client : ",message)
 
     callback("je suis le backend via socket : ",)
   })
@@ -431,14 +436,16 @@ io.on('connection',async (socket)=>{
   })
 
   socket.on("message_from_client",(data)=>{
-    console.log("nouveau message arrivé : ",data)
+
+    console.log("dico : ",dico)
+    //console.log("nouveau message arrivé : ",data)
 
 
     const recipient_sid = userSocketMap.get(data.recipient_id)
     
 
     if(!recipient_sid){
-      console.log("ce recipient_id n'existe pas voici userSocketMap : ",userSocketMap)
+      //console.log("ce recipient_id n'existe pas voici userSocketMap : ",userSocketMap)
 
       return
     }
