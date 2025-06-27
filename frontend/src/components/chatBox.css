@@ -1,0 +1,99 @@
+
+.chatbox{
+	
+	height: 100%;
+}
+
+.entete_chatBox {
+	background-color: red;
+	padding-right: 5%;
+	padding-left: 3%;
+	height: 7%;
+	justify-content: space-between;
+	display: flex;
+	align-items: center;
+	box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+	
+}
+
+.img_admin{
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	
+
+}
+
+.div_profile_admin{
+	
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 40%;
+	padding: 2px;
+
+	gap:5px;
+}
+
+.milieu_chatBox{
+	height: 500px;
+	background-color: green;
+	height: 86%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background-color: green;
+}
+
+
+.MessageLine{
+	width: 100%;
+	border: solid blue 10px;
+	background-color: red;
+}
+
+.bottom_chatBox{
+	background-color: yellow;
+	box-shadow: -10px -2px 1px rgba(0, 0, 0, 0.2);
+	
+	display: flex;
+	align-items: center;
+	height: 7%; 
+	
+	justify-content: space-around;
+	padding-right: 3%;
+	padding-left: 3%;
+
+}
+
+
+.div_icon_bottom{
+	width: 30%;
+	
+	display: flex;
+	justify-content: space-between;
+}
+
+
+
+
+.div_input{
+	display: flex;
+	justify-content: space-around;
+
+	min-width: 50%;
+	
+}
+
+input{
+	width: 70%;
+	margin-right: 3%;
+	border-radius: 30px;
+}
+
+.micro{
+	height: 90%;
+	
+	padding-bottom: 5px;
+}

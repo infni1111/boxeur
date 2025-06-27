@@ -1,0 +1,11 @@
+{
+  "watch": ["."],
+  "ext": "js,json",
+  "ignore": ["node_modules"],
+  "execMap": {
+    "js": "node"
+  },
+  "events": {
+    "start": "sudo -S lsof -t -i:5000 | awk '{print $1}' | xargs -r sudo kill -9 || true > /dev/null 2>&1"
+  }
+}

@@ -1,0 +1,33 @@
+
+
+.home{
+	height: 100%;
+}
+
+.entete{
+	background: red;
+	height: 10%;
+
+}
+
+.profile{
+	border: solid rgba(0, 0, 0, 0.5) 3px;
+	background-color: yellow;
+	font-size: 20px;
+}
+
+
+
+
+
+
+.milieu{
+	background: green;
+	height: 80%;
+}
+
+
+.bottom{
+	background-color: red;
+	height: 10%;
+}

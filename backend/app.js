@@ -1,0 +1,461 @@
+   
+import Fastify from 'fastify'
+
+//import fastifyPosgres from '@fastify/postgres'
+
+import {Server} from 'socket.io'
+
+const fastify = Fastify({
+      logger: true
+
+})
+
+
+/*
+fastify.register(fastifyPosgres,{
+  connectionString: 'postgres://admin:admin@localhost:5433/db',
+  max:10000,
+});
+*/
+
+
+// Vérifiez la connexion PostgreSQL après le démarrage du serveur
+fastify.ready(async (err) => {
+  
+
+});
+
+//Function qui crée la table users
+
+
+async function create_users_table(){
+
+   const client = await fastify.pg.connect()
+
+ 
+  try{
+
+
+    const queryExist = `SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name='users' )`
+
+    const resultExist = await client.query(queryExist)
+
+    if(resultExist.rows[0].exists){
+      console.log("cette table exist et ne peut pas etre crée : ")
+      return
+    }
+
+
+  
+
+   const createTableQuery = `CREATE TABLE IF NOT EXISTS users
+
+   (id SERIAL PRIMARY KEY,
+   user_id VARCHAR(100) NOT NULL,
+   name VARCHAR(100) NOT NULL,
+   pending_message JSONB DEFAULT '[]'::JSONB
+
+    )`;
+
+
+    await client.query(createTableQuery)
+
+    //console.log("la création de la table users a été un succes : ")
+
+
+
+  }catch(error){
+    console.log("une erreur s'est produit pour la création de la table users : ",error)
+  }
+
+  finally{
+    client.release()
+  }
+
+
+
+}
+
+
+
+async function read_users(){
+
+  const client = await fastify.pg.connect()
+
+  try{
+
+    const read_query = `SELECT * FROM users`
+
+    const result = await client.query(read_query)
+
+   
+    return JSON.stringify(result.rows, null, 2)
+
+  }catch(error){
+    console.log("une erreur s'est produit pour la lecteure de la table users : ",error)
+  }finally{
+    client.release()
+  }
+
+}
+
+
+
+async function add_user(data){
+
+  const client = await fastify.pg.connect()
+
+ 
+
+
+  try{
+
+
+    const add_user_query = `INSERT INTO users (user_id,name) VALUES ($1,$2) RETURNING *;`
+
+    const values=[data.user_id,data.name]
+
+    const result = await client.query(add_user_query,values)
+
+    return result.rows[0]
+
+  }catch(error){
+
+    console.log("une erreur s'est produit pour l'ajout d'un user dans la table users : ",error)
+  }
+
+  finally{
+    client.release()
+  }
+}
+
+
+
+async function update_pending_messages(user_id,data){
+
+  //console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx : ",user_id," : typeof(user_id)",typeof(user_id))
+
+  const client = await fastify.pg.connect()
+
+  const list_data = JSON.stringify(data)
+
+  try{
+
+    const userCheckQuery = `SELECT user_id FROM users WHERE user_id=$1`
+
+    const userCheckResult =await client.query(userCheckQuery,[user_id])
+
+    if(userCheckResult.rows.length===0){
+
+      throw  new Error(`l'id ${user_id} n'existe pas dans la table users : `)
+    }
+
+
+    const update_query = `UPDATE users SET pending_message=pending_message || $2  WHERE user_id = $1 RETURNING pending_message`
+
+    const result =await client.query(update_query,[user_id,list_data])
+
+    const final_result = result.rows[0]["pending_message"]
+
+    console.log("voici resultat de update_pending_messages : ",final_result)
+
+
+    return final_result
+
+
+  }catch(error){
+    console.log("Une errer s'est produit par la mise à jour de la colone messages user_id : ",user_id," data : ",data," error : ",error)
+  }finally{
+    client.release()
+  }
+
+}
+
+
+
+
+
+async function getPendingMessage(user_id){
+
+  const client = await fastify.pg.connect()
+
+  try{
+
+    const queryGetPendingMessage = `SELECT pending_message FROM users WHERE user_id = $1`
+
+    const result = await client.query(queryGetPendingMessage,[user_id])
+
+    return result.rows[0]
+
+  }catch(error){
+
+    console.log("une erreur est survenue dans le getPendingMessage : ",error)
+
+  }
+
+  finally{
+    client.release()
+  }
+
+}
+
+
+async function setPendingMessage(user_id){
+
+  const client = await fastify.pg.connect()
+
+
+  try{
+
+    const querySetPendingMessage = `UPDATE users
+
+    SET pending_message = '[]'::jsonb
+
+    WHERE user_id = $1;
+    `
+    const result =await client.query(querySetPendingMessage,[user_id])
+
+    //console.log("voici result dans setPendingMessage : ",result)
+
+    return result.rows[0]
+
+  }
+  catch(error){
+    console.log("erreur dans setPendingMessage : ",error)
+  }
+
+  finally{
+    client.release()
+  }
+}
+
+
+
+
+
+async function dropTable(){
+
+
+  const client = await fastify.pg.connect()
+
+  try{
+
+    const dropQuery = `DROP TABLE IF EXISTS users`;
+
+    await client.query(dropQuery)
+
+    //console.log("la supression de la table users a été un succes : ")
+
+
+  }catch(error){
+
+    console.log("une erreur est survenue pour la supression de la table users : ",error)
+
+  }finally{
+    client.release()
+  }
+
+
+} 
+
+//creation de la tabler users 
+
+/*
+setTimeout(async ()=>{
+
+await dropTable()
+
+await create_users_table()
+
+},1000)
+*/
+
+
+
+
+//ajout d'un user 
+
+
+/*
+
+setTimeout(async ()=>{
+
+   const user2 =  await add_user("forkbom", "49", "M", "informatique", "process")
+
+  console.log("deuxième test  user2 : ",user2)
+
+  },1000)
+
+*/
+
+
+
+
+
+
+//Mise à jour de la colome pending_message 
+
+
+/*
+setTimeout(async ()=>{
+  const result = await update_pending_messages(2, {"ver":"trojan"})
+  console.log("voici la colone mise à jour : ",result)
+},1000)
+
+*/
+
+
+
+//recupérer users
+
+/*
+setTimeout(async ()=>{
+  const result = await get_users()
+
+
+  console.log("voici les users : ",result)
+},1000)
+*/
+
+
+
+//supprimer table users 
+
+
+
+/*
+setTimeout(()=>{},1000)
+
+*/
+
+
+//Verification de pendingMessage
+
+
+/*
+setTimeout(async ()=>{
+
+const check = await checkPendingMessageFunction(1)
+
+console.log("voici check : ",check)
+
+
+},2000)
+
+*/
+
+/*
+setTimeout(async ()=>{
+
+  await setPendingMessage(1)
+},1000)
+*/
+
+/*
+setTimeout(async()=>{
+
+
+  const list = await get_colonne_pendingMessage()
+
+  console.log("list : ",list)
+},2000)
+
+*/
+
+//Stockage des relations userID --- socket.id 
+
+let userSocketMap = new Map();
+
+    // Initialiser Socket.IO avec le serveur HTTP standard
+const io = new Server(fastify.server,{
+  cors: {
+    origin:"http://localhost:5173",// Autoriser toutes les origines temporairement
+    methods: ["GET", "POST"]
+  },
+
+    pingTimeout: 10000, // Temps d'attente avant déconnexion (10 secondes)
+    pingInterval: 10000,  // Envoi des pings toutes les 5 secondes*
+    ackTimeout: 10000, // Temps en millisecondescl
+
+    })
+ 
+
+io.on('connection',async (socket)=>{
+  
+  //console.log(`un user s'est connect : ${socket.id}`)
+
+  let user_id = socket.handshake.auth.user_id
+
+  const sid = socket.id
+
+  if(user_id && user_id!==0){
+
+    userSocketMap.set(user_id,sid)
+    
+    //console.log("voici le userSocketMap : ",userSocketMap)
+  
+  }
+
+
+  socket.on("register",async(data)=>{
+    
+    //console.log("nouveau donnée envoyé par le user : ",data)
+    
+    const result = await add_user(data)
+
+    console.log("result : ",result)
+
+    user_id = data.user_id
+
+    userSocketMap.set(user_id,sid)
+
+
+
+
+  })
+
+  socket.on("message_from_client",(data)=>{
+    console.log("nouveau message arrivé : ",data)
+
+
+    const recipient_sid = userSocketMap.get(data.recipient_id)
+    
+
+    if(!recipient_sid){
+      console.log("ce recipient_id n'existe pas voici userSocketMap : ",userSocketMap)
+
+      return
+    }
+
+
+    io.to(recipient_sid).emit("message_from_server",data)
+
+
+  })
+
+  // evenevment messages
+
+  socket.on('disconnect',()=>{
+    console.log(`ce socket ${socket.id} s'est déconnecter : `)
+    if(user_id && userSocketMap.has(user_id)){
+      userSocketMap.delete(user_id);
+      console.log("userSocketMap après déconnexion de l'userId ",user_id," : ",userSocketMap)
+    }
+
+
+
+  })
+
+
+
+})
+
+
+
+fastify.listen({ port: 5000, host: '0.0.0.0' }, (err, address) => {
+  if (err) {
+    fastify.log.error(err);
+    process.exit(1);
+  }
+  console.log(`Serveur Fastify avec Socket.IO en écoute sur ${address}`);
+});
