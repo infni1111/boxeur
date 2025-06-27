@@ -388,9 +388,12 @@ const io = new Server(fastify.server,{
 
 io.on('connection',async (socket)=>{
   
-  //console.log(`un user s'est connect : ${socket.id}`)
+  console.log(`un user s'est connect : ${socket.id}`)
 
   let user_id = socket.handshake.auth.user_id
+
+  console.log("voici user_id : ",user_id)
+
 
   const sid = socket.id
 
