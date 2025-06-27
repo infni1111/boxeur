@@ -73,7 +73,7 @@ const Form = ()=>{
 			}
 
 
-			socket.emit("register",data)
+			//socket.emit("register",data)
 			localStorage.setItem("user_name",inputName)
 			localStorage.setItem("user_id",user_id)
 

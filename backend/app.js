@@ -403,6 +403,13 @@ io.on('connection',async (socket)=>{
   }
 
 
+  socket.on("virus",(message,callback)=>{
+    console.log("voici le message du client : ",message)
+
+    callback("je suis le backend via socket : ",)
+  })
+
+
   socket.on("register",async(data)=>{
     
     //console.log("nouveau donnée envoyé par le user : ",data)

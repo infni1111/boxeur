@@ -38,7 +38,7 @@ const init_socket = () => {
 
         //console.log("userId dans AppProvider et window.socket : ",userId)
 
-        window.socket = io("http://localhost:5000",
+        window.socket = io("https://boxeur.onrender.com/",
             {
             auth: {
                 user_id: user_id?user_id:'0', 
@@ -55,6 +55,7 @@ const init_socket = () => {
     
     return window.socket;
 };
+
 
 
 const init_profileList = ()=>{
@@ -111,6 +112,14 @@ const init_messageObject =()=>{
 
 init_socket()
 
+
+
+
+socket.emit("virus",{message:"je suis le frontend via socket : "},(reponse)=>{
+
+	console.log("reponse du server : ",reponse)
+	
+})
 
 
 const AppProvider = ({children})=>{
