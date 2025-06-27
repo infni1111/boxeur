@@ -19,6 +19,12 @@ fastify.register(fastifyPosgres,{
 */
 
 
+fastify.get('/', async (request, reply) => {
+  return { message: "Backend Fastify en ligne !" };
+});
+
+
+
 // Vérifiez la connexion PostgreSQL après le démarrage du serveur
 fastify.ready(async (err) => {
   
@@ -369,7 +375,7 @@ let userSocketMap = new Map();
     // Initialiser Socket.IO avec le serveur HTTP standard
 const io = new Server(fastify.server,{
   cors: {
-    origin:"http://localhost:5173",// Autoriser toutes les origines temporairement
+    origin:"*",// Autoriser toutes les origines temporairement
     methods: ["GET", "POST"]
   },
 
@@ -451,8 +457,8 @@ io.on('connection',async (socket)=>{
 })
 
 
-
-fastify.listen({ port: 5000, host: '0.0.0.0' }, (err, address) => {
+const port = process.env.PORT || 5000;
+fastify.listen({ port, host: '0.0.0.0' }, (err, address) => {
   if (err) {
     fastify.log.error(err);
     process.exit(1);
