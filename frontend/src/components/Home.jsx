@@ -8,10 +8,10 @@ import './Home.css'
 const Entete =()=>{
 
 	return(
-		<div className = "entete">
+		<div className = "entete center">
 
-			je suis l'entete
-
+		
+			<p>Clique sur <span>infni</span> pour causer avec moi </p>
 
 		</div>
 
@@ -69,10 +69,9 @@ const Bottom = ()=>{
 
 	return(
 
-		<div className = "bottom">
+		<div className = "bottom center">
 
-			je suis le Bottom 
-
+			cette partie n'est pas encore coder
 
 		</div>
 

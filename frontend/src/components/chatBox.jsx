@@ -83,13 +83,15 @@ const MessageLine = ({token})=>{
 
 
 	return(
-		<div style  = {{backgroundColor:"blue",
+		<div style  = {{marginTop:"10px",
 						width:"100%",
-						paddingLeft:"300px",
-						paddingRight:"300px",
+						padding:"10px",
+						paddingLeft:"40px",
+
+						paddingRight:"40px",
 						display :"flex",
 
-						fontSize:"25px",
+						fontSize:"20px",
 						justifyContent:align,
 
 						}}>
@@ -99,6 +101,8 @@ const MessageLine = ({token})=>{
 				display :"inline-block"
 
 			}}
+
+			className = "token_msg"
 
 		
 

@@ -9,20 +9,9 @@ import io from 'socket.io-client';
 export const AppContext =  createContext()
 
 
-const isMobile = () => {
+const init_isMobile = () => {
   return /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent);
 }
-
-if(isMobile()){
-	//alert("c'est un Android")
-}
-
-else{
-	//alert("c'est l'ordinateur")
-}
-
-
-console.log("rat dans AppProvider")
 
 
 const init_socket = () => {
@@ -103,6 +92,8 @@ const AppProvider = ({children})=>{
 
 
 	const [profileObject,setProfileObject] = useState(init_profileObject())
+
+	const [isMobile]= useState(init_isMobile())
 
 	//console.log("profileList dans AppProvider : ",profileList)
 
