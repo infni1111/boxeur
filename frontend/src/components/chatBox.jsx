@@ -61,6 +61,9 @@ const MessageLine = ({token})=>{
 
 	let bgColor
 
+
+	let transition
+
 	//console.log("token : ,",token)
 
 	//console.log("token.senderId : ",token.senderId)
@@ -69,13 +72,15 @@ const MessageLine = ({token})=>{
 
 	if(token.sender_id ===user_id){
 
-
+		transition= "right"
 		
 		bgColor = bleu_jolie
 		align='flex-end'
 
 	}
 	else{
+
+		transition="left"
 		bgColor= gris_jolie
 		align='flex-start'
 	}
@@ -84,11 +89,12 @@ const MessageLine = ({token})=>{
 
 	return(
 		<div style  = {{marginTop:"10px",
-						width:"100%",
-						padding:"10px",
-						paddingLeft:"40px",
 
-						paddingRight:"40px",
+						width:"100%",
+						padding:"4%",
+						paddingLeft:"7%",
+
+						paddingRight:"7%",
 						display :"flex",
 
 						fontSize:"20px",
@@ -98,11 +104,12 @@ const MessageLine = ({token})=>{
 
 			<div style = {{
 				backgroundColor:bgColor,
-				display :"inline-block"
+				display :"inline-block",
+				maxWidth :"70%",
 
 			}}
 
-			className = "token_msg"
+			className = {transition==="left"?"left token_msg":"right token_msg"}
 
 		
 
@@ -128,7 +135,19 @@ const Milieu = ()=>{
 	const {id} = useParams()
 
 
-	const {profileObject} = useContext(AppContext)
+	const {profileObject,scroll,setScroll} = useContext(AppContext)
+
+	const containerRef = useRef(null)
+
+
+	useEffect(()=>{
+		if(containerRef.current){
+			containerRef.current.scrollTop=containerRef.current.scrollHeight
+		}
+		setScroll(0)
+
+
+	},[profileObject[id],scroll])
 
 
 	if (!profileObject[id]){
@@ -137,19 +156,18 @@ const Milieu = ()=>{
 
 	}
 
-	const b = "infni"
 
 	return(
 
         
 
-		<div className ="milieu_chatBox">
+		<div className ="milieu_chatBox" ref = {containerRef}>
 
 			
 			{
 				profileObject[id]["messages"].map(token_of_messages=><MessageLine token = {token_of_messages} key = {token_of_messages.key} />)
 			}
-			
+	
 
 		</div>
 
@@ -166,7 +184,7 @@ const Bottom = ()=>{
 
 	const {id} = useParams()
 
-	const {profileObject, setProfileObject } = useContext(AppContext)
+	const {profileObject, setProfileObject,scroll,setScroll } = useContext(AppContext)
 
 	const user_id = localStorage.getItem('user_id')
 
@@ -225,6 +243,7 @@ const Bottom = ()=>{
 				[id]:updateProfile}
 		})
 
+
 		
 		socket.emit("message_from_client",token)
 
@@ -250,7 +269,24 @@ const Bottom = ()=>{
 		
 			<div className="div_input"> 
 
-				<input ref = {inputRef} placeholder = "  Message..." onChange = {changeMessage} value = {inputMessage} />
+				<input ref = {inputRef} placeholder = "  Message..." onChange = {changeMessage} value = {inputMessage}
+
+				 onFocus = {()=>{
+
+
+
+				 	setScroll(1)
+
+				}}
+
+
+				  autoComplete="off"
+				  autoCorrect="off"
+				  autoCapitalize="off"
+				  spellCheck={false}
+				  inputMode="text"
+
+				 />
 
 				
 				<IoSend size={30} color="#1a73e8" onClick ={send} />

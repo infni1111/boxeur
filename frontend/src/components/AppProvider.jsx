@@ -23,12 +23,23 @@ const init_socket = () => {
         //console.log("userId dans AppProvider et window.socket : ",userId)
         //https://boxeur.onrender.com/
 
-        window.socket = io("https://boxeur.onrender.com/",
+        window.socket = io("http://192.168.43.192:5000",
             {
             auth: {
                 user_id: user_id?user_id:'0', 
                
-            }});
+            },
+             reconnection: true,           // ✅ Active la reconnexion automatique
+	         reconnectionAttempts: 1000,     // ✅ Nombre maximal de tentatives
+	     	 reconnectionDelay: 2000,      // ✅ Délai initial (2 secondes)
+	     	 reconnectionDelayMax: 1000,  // ✅ Délai max entre les tentatives
+	     	 timeout: 20000                // ✅ Timeout pour la connexion (20 secondes)
+
+
+
+
+
+        });
 
         //window.socket.on("connect",()=>alert("rat"))
 
@@ -93,6 +104,8 @@ const AppProvider = ({children})=>{
 
 	const [profileObject,setProfileObject] = useState(init_profileObject())
 
+	const [scroll,setScroll] = useState(0)
+
 	const [isMobile]= useState(init_isMobile())
 
 	//console.log("profileList dans AppProvider : ",profileList)
@@ -118,14 +131,19 @@ const AppProvider = ({children})=>{
   				   	if (existingProfile) {
 	   					const updatedMessages = [...existingProfile.messages, data]; // nouvelle référence
 					    const updatedProfile = { ...existingProfile, messages: updatedMessages };
-					    return { ...prev, [data.sender_id]: updatedProfile };
+					    const updatedPrev = { ...prev, [data.sender_id]: updatedProfile };
+					    localStorage.setItem('profileObject',JSON.stringify(updatedPrev))
+					    return updatedPrev
 					  } else {
 					    const newProfile = {
 					      name: data.sender_name,
 					      id: data.sender_id,
 					      messages: [data],
 					    };
-					    return { ...prev, [data.sender_id]: newProfile };
+
+					    const updatedPrev = { ...prev, [data.sender_id]: newProfile };
+
+					    return updatedPrev
 					  }
 					});
 
@@ -153,7 +171,7 @@ const AppProvider = ({children})=>{
 
 	return(
 
-		<AppContext.Provider value = {{profileObject,setProfileObject}}>
+		<AppContext.Provider value = {{profileObject,setProfileObject,scroll,setScroll}}>
 
 			{children}
 

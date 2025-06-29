@@ -30,7 +30,8 @@ span{
 	border:1px blue solid;
 	border-top-left-radius: 40%;
 	border-bottom-right-radius: 40%;
-	display: inline-block;
+	margin-top: 1%;
+	width: fit-content;
 	padding:5px;
 	font-size: 18px;
 }

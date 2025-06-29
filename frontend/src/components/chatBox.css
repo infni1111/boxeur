@@ -37,13 +37,12 @@
 
 .milieu_chatBox{
 	
-
 	height: 86%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
-	gap:100px;
+	overflow-y: auto;
+
 	
 	
 }
@@ -97,10 +96,55 @@ input{
 	width: 70%;
 	margin-right: 3%;
 	border-radius: 30px;
+	 outline: none;
+  box-shadow: none;
 }
 
 .micro{
 	height: 90%;
 	
 	padding-bottom: 5px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Animation d’entrée depuis la gauche */
+.left {
+  transform: translateX(-100%);
+  opacity: 0;
+  animation: slideFromLeft 1s forwards;
+}
+
+/* Animation d’entrée depuis la droite */
+.right {
+  transform: translateX(100%);
+  opacity: 0;
+  animation: slideFromRight 1s forwards;
+}
+
+/* Keyframes pour gauche ➡️ droite */
+@keyframes slideFromLeft {
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Keyframes pour droite ➡️ gauche */
+@keyframes slideFromRight {
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }

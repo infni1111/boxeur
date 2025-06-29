@@ -438,7 +438,7 @@ io.on('connection',async (socket)=>{
   socket.on("message_from_client",(data)=>{
 
     //console.log("dico : ",dico)
-    console.log("nouveau message arrivé : ",data)
+    //console.log("nouveau message arrivé : ",data)
 
 
     const recipient_sid = userSocketMap.get(data.recipient_id)
