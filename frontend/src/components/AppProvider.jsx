@@ -22,8 +22,9 @@ const init_socket = () => {
 
         //console.log("userId dans AppProvider et window.socket : ",userId)
         //https://boxeur.onrender.com/
+        //http://192.168.43.192:5000
 
-        window.socket = io("http://192.168.43.192:5000",
+        window.socket = io("https://boxeur.onrender.com/",
             {
             auth: {
                 user_id: user_id?user_id:'0', 
