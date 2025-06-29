@@ -22,6 +22,9 @@ else{
 }
 
 
+console.log("rat dans AppProvider")
+
+
 const init_socket = () => {
 
     if (!window.socket) {  // ✅ Éviter la double connexion
@@ -31,7 +34,7 @@ const init_socket = () => {
         //console.log("userId dans AppProvider et window.socket : ",userId)
         //https://boxeur.onrender.com/
 
-        window.socket = io("http://192.168.43.192:5000",
+        window.socket = io("https://boxeur.onrender.com/",
             {
             auth: {
                 user_id: user_id?user_id:'0', 
