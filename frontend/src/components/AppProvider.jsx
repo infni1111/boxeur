@@ -82,7 +82,7 @@ init_socket()
 
 socket.emit("virus",{message:"je suis le frontend via socket : "},(reponse)=>{
 
-	//console.log("reponse du server : ",reponse)
+	console.log("reponse du server : ",reponse)
 	
 })
 
