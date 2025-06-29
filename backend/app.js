@@ -393,11 +393,11 @@ const io = new Server(fastify.server,{
 
 io.on('connection',async (socket)=>{
   
-  console.log(`un user s'est connect : ${socket.id}`)
+  //console.log(`un user s'est connect : ${socket.id}`)
 
   let user_id = socket.handshake.auth.user_id
 
-  console.log("voici user_id : ",user_id)
+  //console.log("voici user_id : ",user_id)
 
 
   const sid = socket.id
@@ -406,7 +406,7 @@ io.on('connection',async (socket)=>{
 
     userSocketMap.set(user_id,sid)
     
-    console.log("voici le userSocketMap : ",userSocketMap)
+    //console.log("voici le userSocketMap : ",userSocketMap)
   
   }
 
@@ -437,8 +437,8 @@ io.on('connection',async (socket)=>{
 
   socket.on("message_from_client",(data)=>{
 
-    console.log("dico : ",dico)
-    //console.log("nouveau message arrivé : ",data)
+    //console.log("dico : ",dico)
+    console.log("nouveau message arrivé : ",data)
 
 
     const recipient_sid = userSocketMap.get(data.recipient_id)

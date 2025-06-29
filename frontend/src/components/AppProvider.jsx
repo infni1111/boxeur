@@ -9,24 +9,16 @@ import io from 'socket.io-client';
 export const AppContext =  createContext()
 
 
+const isMobile = () => {
+  return /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent);
+}
 
-const check_admin_function = ()=>{
-	
-	const user_id = localStorage.getItem("user_id")
+if(isMobile()){
+	//alert("c'est un Android")
+}
 
-	if(!user_id){
-		return -1
-	}
-
-	if(user_id && user_id.startsWith("infni")){
-		return 1
-	}
-
-	if(user_id && !user_id.startsWith("infni")){
-
-		//console.log("user_id : ",user_id)
-		return 0
-	}
+else{
+	//alert("c'est l'ordinateur")
 }
 
 
@@ -37,16 +29,16 @@ const init_socket = () => {
         const user_id = localStorage.getItem('user_id')
 
         //console.log("userId dans AppProvider et window.socket : ",userId)
+        //https://boxeur.onrender.com/
 
-        window.socket = io("https://boxeur.onrender.com/",
+        window.socket = io("http://192.168.43.192:5000",
             {
             auth: {
                 user_id: user_id?user_id:'0', 
-            
                
             }});
 
-
+        //window.socket.on("connect",()=>alert("rat"))
 
         window.socket.on("disconnect",()=>{
             console.log("le socket s'est déconnecté : ")
@@ -58,54 +50,35 @@ const init_socket = () => {
 
 
 
-const init_profileList = ()=>{
+const init_profileObject = ()=>{
 
-	const storedProfileList= JSON.parse(localStorage.getItem("profileList"))
+	const storedProfileObject= JSON.parse(localStorage.getItem("profileObject"))
 
-	const defaultProfileList = [
+	const defaultProfileObject = {
 			
-			{
+			infni:{
 				name:"infni",
 				id:"infni",
-				key:"infni",
+				messages:[],
 			},
 
-		
-
-
-	]
-
-
-	if(!storedProfileList){
-
-		return defaultProfileList
-	}
-
-
-
-	return storedProfileList
-
-}
-
-
-const init_messageObject =()=>{
-
-	const storedMessageObject = JSON.parse(localStorage.getItem("messageObject"))
-
-
-	const defautMessageOject = {
-
-	}
-
-	if(!storedMessageObject){
-            
-          //console.log("il existe riens dans init_messageObject ")
-		return defautMessageOject
-
-	}
-
 	
-	return storedMessageObject
+	}
+
+
+	if(!storedProfileObject){
+
+		localStorage.setItem('profileObject',JSON.stringify(defaultProfileObject))
+
+		console.log("verification du bon stockage de profileObject : ",JSON.parse(localStorage.getItem('profileObject')))
+
+		return defaultProfileObject
+	}
+
+	//console.log("si ceci est affiché, il doit y avoir storedProfileList : ",storedProfileList)
+
+	return storedProfileObject
+
 }
 
 
@@ -117,7 +90,7 @@ init_socket()
 
 socket.emit("virus",{message:"je suis le frontend via socket : "},(reponse)=>{
 
-	console.log("reponse du server : ",reponse)
+	//console.log("reponse du server : ",reponse)
 	
 })
 
@@ -126,66 +99,41 @@ const AppProvider = ({children})=>{
 
 
 
-	//console.log("checkAdmin dans AppProvider : ",checkAdmin)
+	const [profileObject,setProfileObject] = useState(init_profileObject())
 
-	const [messageObject,setMessageObject] = useState(init_messageObject)
-
-	//console.log("messageObject dans AppProvider : ",messageObject)
-
-	const [profileList,setProfileList] = useState(init_profileList)
-
+	//console.log("profileList dans AppProvider : ",profileList)
 
 	useEffect(() => {
+
   		const socket = window.socket; // toujours utiliser le même socket déjà initialisé
 
   		const handleMessage = (data) => {
     
+    	//console.log("data de handleMessage : ",data)
     	const sender_id = data.sender_id;
 
-   	    const check_profileList = profileList.some(profile => sender_id === profile.id);
+    	//console.log("sender_id dans AppProvider : ",sender_id)
 
-    	if (!check_profileList) {
-      	
-      		const newProfile = {
-      	    name: data.sender_name,
-       	    id: data.sender_id,
-       	    key: nanoid(),
-     	   
-     	    };
-
-     	    setProfileList(prev => {
-       
-            const updatedPrev = [...prev, newProfile];
-        
-            localStorage.setItem('profileList', JSON.stringify(updatedPrev));
-       
-            return updatedPrev;
-    	
-    	   });
-        }
+    	//console.log("storedProfileList dans AppProvider : ",storedProfileList)
 
 
+   	 		setProfileObject(prev => {
+ 		            
+ 		            const existingProfile = prev[data.sender_id];
 
-    	setMessageObject(prev => {
-    
-        const updatedPrev = { ...prev };
-
-        if (!updatedPrev[sender_id]) {
-      
-            updatedPrev[sender_id] = [data];
-     
-          } else {
-       
-        updatedPrev[sender_id] = [...updatedPrev[sender_id], data];
-     
-       }
-
-     
-        localStorage.setItem('messageObject', JSON.stringify(updatedPrev));
-    
-       return updatedPrev;
-  
-        });
+  				   	if (existingProfile) {
+	   					const updatedMessages = [...existingProfile.messages, data]; // nouvelle référence
+					    const updatedProfile = { ...existingProfile, messages: updatedMessages };
+					    return { ...prev, [data.sender_id]: updatedProfile };
+					  } else {
+					    const newProfile = {
+					      name: data.sender_name,
+					      id: data.sender_id,
+					      messages: [data],
+					    };
+					    return { ...prev, [data.sender_id]: newProfile };
+					  }
+					});
 
 
         };
@@ -211,7 +159,7 @@ const AppProvider = ({children})=>{
 
 	return(
 
-		<AppContext.Provider value = {{messageObject,setMessageObject,profileList,setProfileList}}>
+		<AppContext.Provider value = {{profileObject,setProfileObject}}>
 
 			{children}
 

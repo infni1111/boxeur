@@ -124,16 +124,16 @@ const Milieu = ()=>{
 	const {id} = useParams()
 
 
-	const {messageObject} = useContext(AppContext)
+	const {profileObject} = useContext(AppContext)
 
 
-	if (!messageObject[id]){
+	if (!profileObject[id]){
 	
-		return <div className = "milieu_chatBox">messageObject encore vide</div>;
+		return <div className = "milieu_chatBox">profileObject encore vide</div>;
 
 	}
 
-
+	const b = "infni"
 
 	return(
 
@@ -142,11 +142,8 @@ const Milieu = ()=>{
 		<div className ="milieu_chatBox">
 
 			
-				
 			{
-				messageObject[id].map(token_msg_obj=>{
-					return <MessageLine token = {token_msg_obj} key = {token_msg_obj.key} />
-				})
+				profileObject[id]["messages"].map(token_of_messages=><MessageLine token = {token_of_messages} key = {token_of_messages.key} />)
 			}
 			
 
@@ -165,13 +162,13 @@ const Bottom = ()=>{
 
 	const {id} = useParams()
 
-	const {messageObject, setMessageObject } = useContext(AppContext)
+	const {profileObject, setProfileObject } = useContext(AppContext)
 
 	const user_id = localStorage.getItem('user_id')
 
 	const user_name = localStorage.getItem('user_name')
 
-	const inputRef = useRef(null)
+	const inputRef = useRef(null)   
 
 	const [inputMessage,setIntputMessage] = useState("") 
 
@@ -209,38 +206,22 @@ const Bottom = ()=>{
 			sender_id:user_id,
 			sender_name:user_name,
 			recipient_id:id,
-
 			message:inputMessage,
 
 
 		}
 
+		setProfileObject(prev=>{
+			const updatePrev = {...prev}
 
-		if(!messageObject[id]){
-			//console.log("premier communication avec cette id créer  messageObject",messageObject)
-			
-			setMessageObject((prev)=>{
-				const updatedPrev = {...prev}
-				updatedPrev[id] = [token]
+			const updateProfile = {...prev[id],messages:[...prev[id]["messages"],token]}
 
-				localStorage.setItem('messageObject',JSON.stringify(updatedPrev))
+			return {...prev,
 
-				return updatedPrev
-			})
+				[id]:updateProfile}
+		})
 
-		}
-
-		else{
-			setMessageObject((prev)=>{
-				
-				const updatedPrev = {...prev}
-				updatedPrev[id]=[...updatedPrev[id],token]
-				localStorage.setItem('messageObject',JSON.stringify(updatedPrev))
-
-				return updatedPrev
-			})
-		}
-
+		
 		socket.emit("message_from_client",token)
 
 

@@ -44,22 +44,20 @@ const Profile = ({profile_user})=>{
 
 const Milieu =()=>{
 	
-	const {profileList} = useContext(AppContext)
+	const {profileObject} = useContext(AppContext)
 
-	console.log("profileList dans home : ",profileList)
+	console.log("profileObject dans home : ",profileObject)
+
+	//console.log("profileList dans home : ",profileList)
 
 	
 	return(
 		<div className ="milieu">
 
 			{
-				profileList.map((profile)=>{
-
-					return <Profile profile_user = {profile} key = {profile.id} />
-				})
-				
+				Object.values(profileObject).map(elment_of_object=> <Profile profile_user ={elment_of_object} key = {elment_of_object.id} />)
 			}
-		
+
 		</div>
 		)
 }

@@ -80,6 +80,8 @@ const Form = ()=>{
 			setInputName("")
 
 			navigate("/home")
+
+			
 			
 
 
