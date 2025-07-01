@@ -8,7 +8,7 @@
 
 	padding-right: 5%;
 	padding-left: 3%;
-	height: 7%;
+	height: 9%;
 	justify-content: space-between;
 	display: flex;
 	align-items: center;
@@ -17,8 +17,8 @@
 }
 
 .img_admin{
-	width: 40px;
-	height: 40px;
+	width: 35px;
+	height: 35px;
 	border-radius: 50%;
 	
 
@@ -36,13 +36,13 @@
 }
 
 .milieu_chatBox{
-	
-	height: 86%;
+	padding-top: 10px;
+	height: 80%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	overflow-y: auto;
-
+	font-size: 18px;
 	
 	
 }
@@ -50,22 +50,25 @@
 
 .MessageLine{
 	width: 100%;
-	border: solid blue 10px;
-	background-color: red;
+	border: solid black 10px;
+
 }
 
 .token_msg{
+	background-color: yellow;
 	padding:5px;
 	border-radius: 10px;
 }
 
 .bottom_chatBox{
 
+	
+
 	box-shadow: -10px -2px 1px rgba(0, 0, 0, 0.2);
 	
 	display: flex;
-	align-items: center;
-	height: 7%; 
+	align-items: flex-end;
+	height: 10%; 
 	
 	justify-content: space-around;
 	padding-right: 3%;
@@ -84,11 +87,21 @@
 
 
 
-.div_input{
+textarea{
+	border:none;
+	outline: none;
+  background-color: #F0F1F2;
+  box-shadow: none;
+	padding-top: 2%;
+	padding-left: 2%;
+	padding-right: 2%;
+	font-size: 18px;
+	border-radius: 20px;
 	display: flex;
 	justify-content: space-around;
+	height: 95%;
+	width: 45%;
 
-	min-width: 50%;
 	
 }
 
@@ -105,7 +118,6 @@ input{
 	
 	padding-bottom: 5px;
 }
-
 
 
 

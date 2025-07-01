@@ -19,11 +19,13 @@ const virus = nanoid()
 
 const Entete = ()=>{
 
+	const navigate = useNavigate()
+
 	return(
 		<div className = "entete_chatBox">	
 			
 			<div className ="div_profile_admin">
-				<FaArrowLeft />
+				<FaArrowLeft onClick={()=>navigate("/home")} />
 
 				<img src = {img_admin} className = "img_admin" /> 
 
@@ -36,7 +38,7 @@ const Entete = ()=>{
 			</div>
 
 
-			<FaBars />
+			<FaBars size={22} />
 
 			
 		</div>
@@ -88,16 +90,16 @@ const MessageLine = ({token})=>{
 
 
 	return(
-		<div style  = {{marginTop:"10px",
+		<div style  = {{
 
 						width:"100%",
-						padding:"4%",
+						padding:"1%",
 						paddingLeft:"7%",
 
 						paddingRight:"7%",
 						display :"flex",
 
-						fontSize:"20px",
+					
 						justifyContent:align,
 
 						}}>
@@ -135,7 +137,7 @@ const Milieu = ()=>{
 	const {id} = useParams()
 
 
-	const {profileObject,scroll,setScroll} = useContext(AppContext)
+	const {profileObject,scroll,setScroll,midleHeight,setMidleHeight} = useContext(AppContext)
 
 	const containerRef = useRef(null)
 
@@ -144,6 +146,7 @@ const Milieu = ()=>{
 		if(containerRef.current){
 			containerRef.current.scrollTop=containerRef.current.scrollHeight
 		}
+		
 		setScroll(0)
 
 
@@ -161,7 +164,7 @@ const Milieu = ()=>{
 
         
 
-		<div className ="milieu_chatBox" ref = {containerRef}>
+		<div className ="milieu_chatBox" ref = {containerRef} style={{height:midleHeight}}   >
 
 			
 			{
@@ -172,6 +175,8 @@ const Milieu = ()=>{
 		</div>
 
 		)
+
+
 }
 
 
@@ -182,9 +187,12 @@ const Milieu = ()=>{
 const Bottom = ()=>{
 
 
+
+	const [textAreaHeight,setTextAreaHeight]=useState("6%")
+
 	const {id} = useParams()
 
-	const {profileObject, setProfileObject,scroll,setScroll } = useContext(AppContext)
+	const {profileObject, setProfileObject,scroll,setScroll,midleHeight,setMidleHeight} = useContext(AppContext)
 
 	const user_id = localStorage.getItem('user_id')
 
@@ -194,10 +202,45 @@ const Bottom = ()=>{
 
 	const [inputMessage,setIntputMessage] = useState("") 
 
+
 	const changeMessage= (e)=>{
 
-		setIntputMessage(e.target.value)
-		//console.log(inputMessage)
+		const value = e.target.value
+
+
+ 		 const charCount = value.length;
+
+		setIntputMessage(value)
+		//console.log(inputMessage) const charCount = value.length;
+
+		  // Ajuster la hauteur selon le nombre de caractères
+
+		const el = inputRef.current;
+  if (el && el.scrollHeight > el.clientHeight) {
+  	console.log("nouveau hauteur : ")
+  	
+  	setMidleHeight(lastHeight=>{
+
+
+    	const lastHeightNumber = parseInt(lastHeight)
+    	const newHeightNumer = lastHeightNumber-2
+    	return newHeightNumer.toString()+"%"
+    }
+
+  		)
+    setTextAreaHeight(lastHeight=>{
+
+
+    	const lastHeightNumber = parseInt(lastHeight)
+    	const newHeightNumer = lastHeightNumber+2
+    	return newHeightNumer.toString()+"%"
+    })
+ 
+
+    // Tu peux ici déclencher une logique ou agrandir automatiquement
+  }
+		
+
 
 	}
 
@@ -206,7 +249,8 @@ const Bottom = ()=>{
 
 
 		setIntputMessage("")
-
+		setTextAreaHeight("6%")
+  		setMidleHeight("84%")
 		if(!socket.connected){
 			console.log("socket non établie avec le serveur : ",)
 			return
@@ -252,7 +296,7 @@ const Bottom = ()=>{
 	}
 
 	return(
-		<div className = "bottom_chatBox">
+		<div className = "bottom_chatBox"   style = {{height:textAreaHeight}} >
 
 			<div className = "div_icon_bottom">
 
@@ -267,34 +311,42 @@ const Bottom = ()=>{
 			</div>
 			
 		
-			<div className="div_input"> 
+		
+				<textarea
+  					ref={inputRef}
+  					placeholder="Message..."
+  					onChange={changeMessage}
+  					value={inputMessage}
+  					onFocus={() => 
 
-				<input ref = {inputRef} placeholder = "  Message..." onChange = {changeMessage} value = {inputMessage}
+  						{
 
-				 onFocus = {()=>{
+  					setTextAreaHeight("8%")
+  					setScroll(1)
+  						}
+  					}
+
+  					onBlur={()=>
+  						{
+  							setTextAreaHeight("6%")
+  							setMidleHeight("84%")
+
+  						}
 
 
+  					}
+  					rows={1}
+ 				  
+					/>
 
-				 	setScroll(1)
 
-				}}
-
-
-				  autoComplete="off"
-				  autoCorrect="off"
-				  autoCapitalize="off"
-				  spellCheck={false}
-				  inputMode="text"
-
-				 />
-
-				
 				<IoSend size={30} color="#1a73e8" onClick ={send} />
 
+
+
+			
 			
 
-
-			</div>
 
 		</div>
 		)

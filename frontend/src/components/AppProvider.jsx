@@ -30,13 +30,15 @@ const init_socket = () => {
                 user_id: user_id?user_id:'0', 
                
             },
+
+            
              reconnection: true,           // ✅ Active la reconnexion automatique
 	         reconnectionAttempts: 1000,     // ✅ Nombre maximal de tentatives
 	     	 reconnectionDelay: 2000,      // ✅ Délai initial (2 secondes)
 	     	 reconnectionDelayMax: 1000,  // ✅ Délai max entre les tentatives
 	     	 timeout: 20000                // ✅ Timeout pour la connexion (20 secondes)
 
-
+			
 
 
 
@@ -107,6 +109,8 @@ const AppProvider = ({children})=>{
 
 	const [scroll,setScroll] = useState(0)
 
+	const [midleHeight,setMidleHeight]=useState("84%")
+
 	const [isMobile]= useState(init_isMobile())
 
 	//console.log("profileList dans AppProvider : ",profileList)
@@ -172,7 +176,7 @@ const AppProvider = ({children})=>{
 
 	return(
 
-		<AppContext.Provider value = {{profileObject,setProfileObject,scroll,setScroll}}>
+		<AppContext.Provider value = {{profileObject,setProfileObject,scroll,setScroll,midleHeight,setMidleHeight}}>
 
 			{children}
 
