@@ -37,7 +37,7 @@
 
 .milieu_chatBox{
 	padding-top: 10px;
-	height: 80%;
+	height: 83%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -68,7 +68,7 @@
 	
 	display: flex;
 	align-items: flex-end;
-	height: 10%; 
+	height: 8%; 
 	
 	justify-content: space-around;
 	padding-right: 3%;
@@ -78,7 +78,9 @@
 
 
 .div_icon_bottom{
-	width: 30%;
+	width: 55%;
+
+	height: 90%;
 	
 	display: flex;
 	justify-content: space-between;
@@ -87,40 +89,39 @@
 
 
 
-textarea{
+input{
 	border:none;
 	outline: none;
   background-color: #F0F1F2;
   box-shadow: none;
-	padding-top: 2%;
+  margin-bottom: 2%;
 	padding-left: 2%;
 	padding-right: 2%;
 	font-size: 18px;
+
 	border-radius: 20px;
 	display: flex;
 	justify-content: space-around;
-	height: 95%;
-	width: 45%;
+	height: 70%;
+	width: 40%;
 
 	
 }
 
-input{
-	width: 70%;
-	margin-right: 3%;
-	border-radius: 30px;
-	 outline: none;
-  box-shadow: none;
+.send{
+	margin-bottom: 2%;
+
 }
 
 .micro{
-	height: 90%;
+
 	
-	padding-bottom: 5px;
 }
 
 
-
+.camera{
+	margin-top: 9%;
+}
 
 
 

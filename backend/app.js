@@ -1,7 +1,14 @@
    
 import Fastify from 'fastify'
 
-//import fastifyPosgres from '@fastify/postgres'
+import fastifyPosgres from '@fastify/postgres'
+
+import 'dotenv/config'
+
+
+import dotenv from 'dotenv'
+
+
 
 import {Server} from 'socket.io'
 
@@ -11,12 +18,30 @@ const fastify = Fastify({
 })
 
 
-/*
-fastify.register(fastifyPosgres,{
-  connectionString: 'postgres://admin:admin@localhost:5433/db',
-  max:10000,
+import dns from 'dns';
+
+// Forcer dns.lookup à ne retourner que des adresses IPv4
+const originalLookup = dns.lookup;
+dns.lookup = (hostname, options, callback) => {
+  if (typeof options === 'function') {
+    callback = options;
+    options = { family: 4, all: false };
+  } else if (typeof options === 'object') {
+    options.family = 4;
+  } else {
+    options = { family: 4, all: false };
+  }
+  return originalLookup.call(dns, hostname, options, callback);
+};
+
+
+
+fastify.register(fastifyPosgres, {
+  connectionString: process.env.DATABASE_URL,
+  idleTimeoutMillis: 30000,    // 30s d’inactivité avant recyclage
+  connectionTimeoutMillis: 20000, // 20s avant timeout
 });
-*/
+
 
 
 fastify.get('/', async (request, reply) => {
@@ -42,7 +67,7 @@ async function create_users_table(){
   try{
 
 
-    const queryExist = `SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name='users' )`
+    const queryExist = `SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_schema='public' AND table_name='users' )`
 
     const resultExist = await client.query(queryExist)
 
@@ -54,7 +79,7 @@ async function create_users_table(){
 
   
 
-   const createTableQuery = `CREATE TABLE IF NOT EXISTS users
+   const createTableQuery = `CREATE TABLE IF NOT EXISTS public.users
 
    (id SERIAL PRIMARY KEY,
    user_id VARCHAR(100) NOT NULL,
@@ -66,7 +91,7 @@ async function create_users_table(){
 
     await client.query(createTableQuery)
 
-    //console.log("la création de la table users a été un succes : ")
+    console.log("la création de la table users a été un succes : ")
 
 
 
@@ -90,7 +115,7 @@ async function read_users(){
 
   try{
 
-    const read_query = `SELECT * FROM users`
+    const read_query = `SELECT * FROM public.users`
 
     const result = await client.query(read_query)
 
@@ -117,7 +142,7 @@ async function add_user(data){
   try{
 
 
-    const add_user_query = `INSERT INTO users (user_id,name) VALUES ($1,$2) RETURNING *;`
+    const add_user_query = `INSERT INTO public.users (user_id,name) VALUES ($1,$2) RETURNING *;`
 
     const values=[data.user_id,data.name]
 
@@ -147,7 +172,7 @@ async function update_pending_messages(user_id,data){
 
   try{
 
-    const userCheckQuery = `SELECT user_id FROM users WHERE user_id=$1`
+    const userCheckQuery = `SELECT user_id FROM public.users WHERE user_id=$1`
 
     const userCheckResult =await client.query(userCheckQuery,[user_id])
 
@@ -163,7 +188,6 @@ async function update_pending_messages(user_id,data){
 
     const final_result = result.rows[0]["pending_message"]
 
-    console.log("voici resultat de update_pending_messages : ",final_result)
 
 
     return final_result
@@ -187,11 +211,14 @@ async function getPendingMessage(user_id){
 
   try{
 
-    const queryGetPendingMessage = `SELECT pending_message FROM users WHERE user_id = $1`
+    const queryGetPendingMessage = `SELECT pending_message FROM public.users WHERE user_id = $1`
 
     const result = await client.query(queryGetPendingMessage,[user_id])
 
-    return result.rows[0]
+
+    console.log("result dans getPendingMessage : ",result)
+
+    return result.rows[0]?.pending_message || [];
 
   }catch(error){
 
@@ -213,7 +240,7 @@ async function setPendingMessage(user_id){
 
   try{
 
-    const querySetPendingMessage = `UPDATE users
+    const querySetPendingMessage = `UPDATE public.users
 
     SET pending_message = '[]'::jsonb
 
@@ -246,7 +273,7 @@ async function dropTable(){
 
   try{
 
-    const dropQuery = `DROP TABLE IF EXISTS users`;
+    const dropQuery = `DROP TABLE IF EXISTS public.users`;
 
     await client.query(dropQuery)
 
@@ -264,7 +291,19 @@ async function dropTable(){
 
 } 
 
+/*
+setTimeout(async ()=>{
+  const result = await read_users()
+
+  console.log("result : ",result)
+
+
+},500)
+
+*/
+
 //creation de la tabler users 
+
 
 /*
 setTimeout(async ()=>{
@@ -279,20 +318,22 @@ await create_users_table()
 
 
 
+
 //ajout d'un user 
 
 
 /*
-
 setTimeout(async ()=>{
 
-   const user2 =  await add_user("forkbom", "49", "M", "informatique", "process")
+   const user2 =  await add_user({user_id:"2555",name:"aomine"})
 
   console.log("deuxième test  user2 : ",user2)
 
   },1000)
 
+
 */
+
 
 
 
@@ -371,10 +412,6 @@ setTimeout(async()=>{
 //Stockage des relations userID --- socket.id 
 
 
-const dico = {
-  "name":"virus"
-}
-
 let userSocketMap = new Map();
 
     // Initialiser Socket.IO avec le serveur HTTP standard
@@ -392,10 +429,36 @@ const io = new Server(fastify.server,{
  
 
 io.on('connection',async (socket)=>{
+
   
-  console.log(`un user s'est connect : ${socket.id}`)
+  async function send_pending_msg(user_id){
+
+    
+    const pending_msg_list = await getPendingMessage(user_id)
+
+    console.log("pending_msg_list pour  : ",pending_msg_list," name : ",user_name)
+
+    if (pending_msg_list.length !== 0) {
+        console.log("pending_msg_list non vide ", pending_msg_list," name : ",user_name);
+
+        for (const msg of pending_msg_list) {
+          socket.emit("message_from_server", msg); // ✅ un seul message à la fois
+        }
+
+        await setPendingMessage(user_id);
+      }
+
+
+    else{
+      console.log("pas de messages pour user_name ",user_name)
+    }
+  }
+  
 
   let user_id = socket.handshake.auth.user_id
+
+  let user_name = socket.handshake.auth.user_name
+
 
   //console.log("voici user_id : ",user_id)
 
@@ -417,10 +480,12 @@ io.on('connection',async (socket)=>{
     callback("je suis le backend via socket : ",)
   })
 
+  await send_pending_msg(user_id)
+
 
   socket.on("register",async(data)=>{
     
-    //console.log("nouveau donnée envoyé par le user : ",data)
+    console.log("nouveau donnée envoyé par le user : ",data)
     
     const result = await add_user(data)
 
@@ -435,17 +500,21 @@ io.on('connection',async (socket)=>{
 
   })
 
-  socket.on("message_from_client",(data)=>{
+  socket.on("message_from_client",async (data)=>{
 
-    //console.log("dico : ",dico)
-    //console.log("nouveau message arrivé : ",data)
+    console.log("nouveau message arrivé : ",data)
 
+    const recipient_id = data.recipient_id
 
     const recipient_sid = userSocketMap.get(data.recipient_id)
     
 
     if(!recipient_sid){
-      //console.log("ce recipient_id n'existe pas voici userSocketMap : ",userSocketMap)
+      console.log("ce data.sender_name n'existe pas dans userSocketMap voici userSocketMap : ",userSocketMap)
+
+      const  result_updating_message = await update_pending_messages(recipient_id, data)
+
+      console.log("resultde la mise à jour de data.sender_name : ",result_updating_message)
 
       return
     }

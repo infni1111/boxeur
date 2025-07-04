@@ -46,8 +46,6 @@ const Milieu =()=>{
 	
 	const {profileObject} = useContext(AppContext)
 
-	console.log("profileObject dans home : ",profileObject)
-
 	//console.log("profileList dans home : ",profileList)
 
 	

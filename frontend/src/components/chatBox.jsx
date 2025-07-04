@@ -12,17 +12,21 @@ import img_admin from '../assets/images/infni.jpg'
 import {nanoid} from 'nanoid'
 
 
-const virus = nanoid()
+
 
 
 
 
 const Entete = ()=>{
 
+	const {initial_appHeight} = useContext(AppContext)
+
+	const entete_height = (initial_appHeight/15).toString()+"px"
+
 	const navigate = useNavigate()
 
 	return(
-		<div className = "entete_chatBox">	
+		<div className = "entete_chatBox" style ={{height : entete_height}}>	
 			
 			<div className ="div_profile_admin">
 				<FaArrowLeft onClick={()=>navigate("/home")} />
@@ -137,7 +141,9 @@ const Milieu = ()=>{
 	const {id} = useParams()
 
 
-	const {profileObject,scroll,setScroll,midleHeight,setMidleHeight} = useContext(AppContext)
+	
+
+	const {profileObject,scroll,setScroll} = useContext(AppContext)
 
 	const containerRef = useRef(null)
 
@@ -164,7 +170,7 @@ const Milieu = ()=>{
 
         
 
-		<div className ="milieu_chatBox" ref = {containerRef} style={{height:midleHeight}}   >
+		<div className ="milieu_chatBox"    >
 
 			
 			{
@@ -186,19 +192,24 @@ const Milieu = ()=>{
 
 const Bottom = ()=>{
 
+	const {appHeight,initial_appHeight} = useContext(AppContext)
 
+	const [bottomHeight,setBottomHeight]=useState((initial_appHeight/15).toString()+"px") 
 
-	const [textAreaHeight,setTextAreaHeight]=useState("6%")
+	const iconDivRef  = useRef(null)
+	const [icon_size,set_icon_size]=useState(30)
 
 	const {id} = useParams()
 
-	const {profileObject, setProfileObject,scroll,setScroll,midleHeight,setMidleHeight} = useContext(AppContext)
+	const {profileObject, setProfileObject,scroll,setScroll} = useContext(AppContext)
 
 	const user_id = localStorage.getItem('user_id')
 
 	const user_name = localStorage.getItem('user_name')
 
 	const inputRef = useRef(null)   
+
+	const bottomRef =useRef(null)
 
 	const [inputMessage,setIntputMessage] = useState("") 
 
@@ -215,30 +226,6 @@ const Bottom = ()=>{
 
 		  // Ajuster la hauteur selon le nombre de caractères
 
-		const el = inputRef.current;
-  if (el && el.scrollHeight > el.clientHeight) {
-  	console.log("nouveau hauteur : ")
-  	
-  	setMidleHeight(lastHeight=>{
-
-
-    	const lastHeightNumber = parseInt(lastHeight)
-    	const newHeightNumer = lastHeightNumber-2
-    	return newHeightNumer.toString()+"%"
-    }
-
-  		)
-    setTextAreaHeight(lastHeight=>{
-
-
-    	const lastHeightNumber = parseInt(lastHeight)
-    	const newHeightNumer = lastHeightNumber+2
-    	return newHeightNumer.toString()+"%"
-    })
- 
-
-    // Tu peux ici déclencher une logique ou agrandir automatiquement
-  }
 		
 
 
@@ -249,8 +236,8 @@ const Bottom = ()=>{
 
 
 		setIntputMessage("")
-		setTextAreaHeight("6%")
-  		setMidleHeight("84%")
+		//setTextAreaHeight("8%")
+  		//setMidleHeight("84%")
 		if(!socket.connected){
 			console.log("socket non établie avec le serveur : ",)
 			return
@@ -296,23 +283,25 @@ const Bottom = ()=>{
 	}
 
 	return(
-		<div className = "bottom_chatBox"   style = {{height:textAreaHeight}} >
 
-			<div className = "div_icon_bottom">
+		<div className = "bottom_chatBox" ref={bottomRef}   >
 
-				< MdPhotoCamera size={30} color="#1a73e8" />
-
-				<MdVideocam size={30} color="#1a73e8" />
-
-				<FaMicrophone className = "micro" size={28} color="#1a73e8" />
-
-
-
-			</div>
 			
+				<div className = "div_icon_bottom" ref = {iconDivRef}>
+
+						< MdPhotoCamera size={35} color="#1a73e8" className="camera" />
+
+				<MdVideocam size={38} color="#1a73e8" className="camera" />
+
+				<FaMicrophone className = "micro" size={38} color="#1a73e8" />
+
+
+
+				</div>
+
+
 		
-		
-				<textarea
+				<input
   					ref={inputRef}
   					placeholder="Message..."
   					onChange={changeMessage}
@@ -320,27 +309,42 @@ const Bottom = ()=>{
   					onFocus={() => 
 
   						{
+  							bottomRef.current.style.height="10%"
+  							iconDivRef.current.style.display="none"
+  							inputRef.current.style.width="85c%"
+  				
 
-  					setTextAreaHeight("8%")
   					setScroll(1)
+  					
   						}
   					}
 
   					onBlur={()=>
-  						{
-  							setTextAreaHeight("6%")
-  							setMidleHeight("84%")
+  						{	inputRef.current.style.width="40%"
+  							bottomRef.current.style.height="8%"
+  							iconDivRef.current.style.display="flex"
+  							iconDivRef.current.style.width="35%"
+  							iconDivRef.current.style.justifyContent="space-between%"
+  							
+
+  						
+  							send()
+
+  						
 
   						}
 
 
   					}
+
+  					
+
   					rows={1}
  				  
 					/>
 
 
-				<IoSend size={30} color="#1a73e8" onClick ={send} />
+				<IoSend size={35} color="#1a73e8" className="send" />
 
 
 
@@ -355,16 +359,20 @@ const Bottom = ()=>{
 
 
 
+
 const ChatBox=()=>{
+
 	return(
 
-		<div className = "chatbox"> 	
+		<div className = "chatbox" > 	
 			
 			<Entete />
 
-			<Milieu />
+				<Milieu />
 
-			<Bottom />
+				<Bottom />
+
+		
 		</div>
 
 

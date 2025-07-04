@@ -20,14 +20,17 @@ const init_socket = () => {
 
         const user_id = localStorage.getItem('user_id')
 
+        const user_name = localStorage.getItem('user_name')
+
         //console.log("userId dans AppProvider et window.socket : ",userId)
         //https://boxeur.onrender.com/
         //http://192.168.43.192:5000
 
-        window.socket = io("https://boxeur.onrender.com/",
+        window.socket = io("http://192.168.43.192:5000",
             {
             auth: {
                 user_id: user_id?user_id:'0', 
+                user_name:user_name?user_name:"no_name"
                
             },
 
@@ -93,7 +96,6 @@ init_socket()
 
 
 
-
 socket.emit("virus",{message:"je suis le frontend via socket : "},(reponse)=>{
 
 	console.log("reponse du server : ",reponse)
@@ -101,15 +103,40 @@ socket.emit("virus",{message:"je suis le frontend via socket : "},(reponse)=>{
 })
 
 
+
+
 const AppProvider = ({children})=>{
+
+	
+	const [initial_appHeight] = useState(window.visualViewport.height)
+
+	const [appHeight,setAppHeight] = useState(window.visualViewport.height)
+
+
+
+		useEffect(() => {
+		    const viewport = window.visualViewport;
+
+		    const handleResize = () => {
+		      const height = viewport.height;
+
+		      setAppHeight(height)
+		    };
+
+		    viewport.addEventListener('resize', handleResize);
+		    
+		    return () => {
+		      viewport.removeEventListener('resize', handleResize);
+		    };
+		  }, []);
+
+	
 
 
 
 	const [profileObject,setProfileObject] = useState(init_profileObject())
 
 	const [scroll,setScroll] = useState(0)
-
-	const [midleHeight,setMidleHeight]=useState("84%")
 
 	const [isMobile]= useState(init_isMobile())
 
@@ -121,37 +148,35 @@ const AppProvider = ({children})=>{
 
   		const handleMessage = (data) => {
     
-    	//console.log("data de handleMessage : ",data)
+    	console.log("data de handleMessage : ",data)
     	const sender_id = data.sender_id;
 
     	//console.log("sender_id dans AppProvider : ",sender_id)
 
     	//console.log("storedProfileList dans AppProvider : ",storedProfileList)
 
+		setProfileObject(prev => {
+	        
+	        const existingProfile = prev[data.sender_id];
 
-   	 		setProfileObject(prev => {
- 		            
- 		            const existingProfile = prev[data.sender_id];
+		   	if (existingProfile) {
+				const updatedMessages = [...existingProfile.messages, data]; // nouvelle référence
+		    const updatedProfile = { ...existingProfile, messages: updatedMessages };
+		    const updatedPrev = { ...prev, [data.sender_id]: updatedProfile };
+		    localStorage.setItem('profileObject',JSON.stringify(updatedPrev))
+		    return updatedPrev
+		  } else {
+		    const newProfile = {
+		      name: data.sender_name,
+		      id: data.sender_id,
+		      messages: [data],
+		    };
 
-  				   	if (existingProfile) {
-	   					const updatedMessages = [...existingProfile.messages, data]; // nouvelle référence
-					    const updatedProfile = { ...existingProfile, messages: updatedMessages };
-					    const updatedPrev = { ...prev, [data.sender_id]: updatedProfile };
-					    localStorage.setItem('profileObject',JSON.stringify(updatedPrev))
-					    return updatedPrev
-					  } else {
-					    const newProfile = {
-					      name: data.sender_name,
-					      id: data.sender_id,
-					      messages: [data],
-					    };
+		    const updatedPrev = { ...prev, [data.sender_id]: newProfile };
 
-					    const updatedPrev = { ...prev, [data.sender_id]: newProfile };
-
-					    return updatedPrev
-					  }
-					});
-
+		    return updatedPrev
+		  }
+		});
 
         };
 
@@ -176,7 +201,7 @@ const AppProvider = ({children})=>{
 
 	return(
 
-		<AppContext.Provider value = {{profileObject,setProfileObject,scroll,setScroll,midleHeight,setMidleHeight}}>
+		<AppContext.Provider value = {{profileObject,setProfileObject,scroll,setScroll,initial_appHeight,setAppHeight}}>
 
 			{children}
 

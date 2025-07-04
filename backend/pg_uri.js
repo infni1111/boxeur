@@ -1,0 +1,1 @@
+postgresql://postgres.ecrwbzwkzsgjbzctvssq:Toujourstravailler1@aws-0-eu-central-1.pooler.supabase.com:5432/postgres

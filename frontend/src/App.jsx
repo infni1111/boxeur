@@ -18,7 +18,7 @@ import {BrowserRouter as Router, Routes, Route, Link} from 'react-router-dom'
 
 const App =()=>{
 
-  const {checkAdmin} = useContext(AppContext)
+  const {initial_appHeight,appHeight} = useContext(AppContext)
 
   const user_id = localStorage.getItem("user_id")
 
@@ -30,6 +30,8 @@ const App =()=>{
 
     <div
     className = "app"
+
+    style = {{height:appHeight}}
     >
 
         <Routes>
