@@ -11,6 +11,17 @@
 	
 }
 
+
+.div_name{
+	
+	width: 100%;
+	align-items: center;
+	
+	height: 50px;
+	display: flex;
+	justify-content: center;
+}
+
 .button{
 	display: block;
 	margin-top: 10px;
@@ -21,6 +32,9 @@
 }
 
 input{
-	width: 70%;
+
+	
+
+	min-width: 50%;
 	margin-left: 10px;
 }

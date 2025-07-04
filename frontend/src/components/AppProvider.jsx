@@ -26,7 +26,7 @@ const init_socket = () => {
         //https://boxeur.onrender.com/
         //http://192.168.43.192:5000
 
-        window.socket = io("https://boxeur.onrender.com",
+        window.socket = io("https://boxeur.onrender.com/",
             {
             auth: {
                 user_id: user_id?user_id:'0', 
@@ -112,7 +112,7 @@ const AppProvider = ({children})=>{
 
 	const [appHeight,setAppHeight] = useState(window.visualViewport.height)
 
-
+	
 
 		useEffect(() => {
 		    const viewport = window.visualViewport;

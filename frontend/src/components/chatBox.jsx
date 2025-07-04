@@ -10,6 +10,9 @@ import {FaBars} from 'react-icons/fa'
 import {FaMicrophone} from 'react-icons/fa'
 import img_admin from '../assets/images/infni.jpg'
 import {nanoid} from 'nanoid'
+import { HiMicrophone } from 'react-icons/hi'
+import { BsMicFill } from 'react-icons/bs'
+
 
 
 
@@ -152,8 +155,12 @@ const Milieu = ()=>{
 		if(containerRef.current){
 			containerRef.current.scrollTop=containerRef.current.scrollHeight
 		}
-		
-		setScroll(0)
+		console.log("onFocus")
+		setScroll(prev=>{
+			console.log("je me trouve dans le scroll de useEffect Milieu")
+
+			return 0
+		})
 
 
 	},[profileObject[id],scroll])
@@ -170,7 +177,7 @@ const Milieu = ()=>{
 
         
 
-		<div className ="milieu_chatBox"    >
+		<div className ="milieu_chatBox"  ref = {containerRef}  >
 
 			
 			{
@@ -289,11 +296,12 @@ const Bottom = ()=>{
 			
 				<div className = "div_icon_bottom" ref = {iconDivRef}>
 
+
 						< MdPhotoCamera size={35} color="#1a73e8" className="camera" />
 
-				<MdVideocam size={38} color="#1a73e8" className="camera" />
+				<MdVideocam size={35} color="#1a73e8" className="camera" />
 
-				<FaMicrophone className = "micro" size={38} color="#1a73e8" />
+				<BsMicFill className = "micro" size={27} color="#1a73e8" />
 
 
 
@@ -309,9 +317,9 @@ const Bottom = ()=>{
   					onFocus={() => 
 
   						{
-  							bottomRef.current.style.height="10%"
+  							bottomRef.current.style.height="13%"
   							iconDivRef.current.style.display="none"
-  							inputRef.current.style.width="85c%"
+  							inputRef.current.style.width="85%"
   				
 
   					setScroll(1)
@@ -322,6 +330,7 @@ const Bottom = ()=>{
   					onBlur={()=>
   						{	inputRef.current.style.width="40%"
   							bottomRef.current.style.height="8%"
+
   							iconDivRef.current.style.display="flex"
   							iconDivRef.current.style.width="35%"
   							iconDivRef.current.style.justifyContent="space-between%"
@@ -344,9 +353,9 @@ const Bottom = ()=>{
 					/>
 
 
+
+
 				<IoSend size={35} color="#1a73e8" className="send" />
-
-
 
 			
 			

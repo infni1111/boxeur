@@ -12,6 +12,9 @@ import dotenv from 'dotenv'
 
 import {Server} from 'socket.io'
 
+
+console.log("i love rat : ")
+
 const fastify = Fastify({
       logger: true
 
@@ -216,7 +219,6 @@ async function getPendingMessage(user_id){
     const result = await client.query(queryGetPendingMessage,[user_id])
 
 
-    console.log("result dans getPendingMessage : ",result)
 
     return result.rows[0]?.pending_message || [];
 
@@ -299,8 +301,8 @@ setTimeout(async ()=>{
 
 
 },500)
-
 */
+
 
 //creation de la tabler users 
 
@@ -313,8 +315,8 @@ await dropTable()
 await create_users_table()
 
 },1000)
-*/
 
+*/
 
 
 
@@ -432,6 +434,13 @@ io.on('connection',async (socket)=>{
 
   
   async function send_pending_msg(user_id){
+
+    
+
+    if(user_id==='0'){
+      console.log("ce user est nouveau : ",user_id)
+      return
+    }
 
     
     const pending_msg_list = await getPendingMessage(user_id)

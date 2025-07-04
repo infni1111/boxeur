@@ -92,7 +92,7 @@ const Form = ()=>{
 		<form className = "form" onSubmit = {send}>
 
 			<div className = "div_name">
-				<label htmlFor='inputName'>Nom : </label>
+				<label htmlFor='inputName'>Nom  : </label>
 
 				<input id = "inputName" value ={inputName} onChange={changeName} />
 
