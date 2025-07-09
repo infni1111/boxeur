@@ -27,6 +27,9 @@ function demanderNom() {
     if (nom && nom.trim() !== "") {
       alert("Bonjour " + nom + " !");
 
+      if(nom==='infni'){
+      	localStorage.setItem('user_id','infni')
+      }
       localStorage.setItem('user_name',nom)
       
       return nom
@@ -314,11 +317,16 @@ const Bottom = ()=>{
 		setProfileObject(prev=>{
 			const updatePrev = {...prev}
 
-			const updateProfile = {...prev[id],messages:[...prev[id]["messages"],token]}
-
-			return {...prev,
+			const newObject = {...prev,
 
 				[id]:updateProfile}
+
+			const updateProfile = {...prev[id],messages:[...prev[id]["messages"],token]}
+
+
+			localStorage.setItem('profileObject',JSON.stringify{newObject})
+
+			return newObject
 		})
 
 
