@@ -18,6 +18,45 @@ import { BsMicFill } from 'react-icons/bs'
 
 
 
+function demanderNom() {
+
+
+  while (true) {
+    const nom = prompt("Entrez votre nom :");
+
+    if (nom && nom.trim() !== "") {
+      alert("Bonjour " + nom + " !");
+
+      localStorage.setItem('user_name',nom)
+      
+      return nom
+
+    } else {
+      alert("Veuillez entrer un nom valide !");
+    }
+  }
+}
+
+
+
+
+
+const init_user_name = ()=>{
+
+	const user_name = localStorage.getItem('user_name')
+
+	if(!user_name){
+		return demanderNom()
+	}
+
+
+	return user_name
+}
+
+
+
+
+
 
 
 const Entete = ()=>{
@@ -212,8 +251,6 @@ const Bottom = ()=>{
 
 	const user_id = localStorage.getItem('user_id')
 
-	const user_name = localStorage.getItem('user_name')
-
 	const inputRef = useRef(null)   
 
 	const bottomRef =useRef(null)
@@ -239,7 +276,10 @@ const Bottom = ()=>{
 	}
 
 
-	const send = ()=>{
+	const send = async ()=>{
+
+
+		const user_name = init_user_name()
 
 
 		setIntputMessage("")

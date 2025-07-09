@@ -38,7 +38,7 @@ const App =()=>{
 
 
 
-          <Route path= "/" element = {user_id? <Home />:<Form />} />
+          <Route path= "/" element = {<Home />} />
 
           <Route path = "/home" element = {<Home />} />
 

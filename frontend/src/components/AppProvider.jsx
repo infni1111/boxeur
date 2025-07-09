@@ -9,12 +9,36 @@ import io from 'socket.io-client';
 export const AppContext =  createContext()
 
 
+
+
+
+const init_user_id =async ()=>{
+
+	const user_id= localStorage.getItem('user_id')
+
+	if(!user_id){
+		const first_user_id = nanoid()
+
+		localStorage.setItem('user_id',first_user_id)
+
+		return first_user_id
+	}
+
+
+
+	return user_id
+}
+
+
+
+
+
 const init_isMobile = () => {
   return /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent);
 }
 
 
-const init_socket = () => {
+const init_socket = async () => {
 
     if (!window.socket) {  // ✅ Éviter la double connexion
 
@@ -26,11 +50,11 @@ const init_socket = () => {
         //https://boxeur.onrender.com/
         //http://192.168.43.192:5000
 
-        window.socket = io("https://boxeur.onrender.com/",
+        window.socket = io("http://192.168.43.192:5000/",
             {
             auth: {
-                user_id: user_id?user_id:'0', 
-                user_name:user_name?user_name:"no_name"
+                user_id: await init_user_id(), 
+              
                
             },
 
@@ -48,6 +72,15 @@ const init_socket = () => {
         });
 
         //window.socket.on("connect",()=>alert("rat"))
+
+
+
+
+		window.socket.emit("virus",{message:"je suis le frontend via socket : "},(reponse)=>{
+
+			console.log("reponse du server : ",reponse)
+			
+		})
 
         window.socket.on("disconnect",()=>{
             console.log("le socket s'est déconnecté : ")
@@ -94,13 +127,6 @@ const init_profileObject = ()=>{
 
 init_socket()
 
-
-
-socket.emit("virus",{message:"je suis le frontend via socket : "},(reponse)=>{
-
-	console.log("reponse du server : ",reponse)
-	
-})
 
 
 

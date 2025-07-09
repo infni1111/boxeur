@@ -79,14 +79,10 @@ async function create_users_table(){
       return
     }
 
-
-  
-
    const createTableQuery = `CREATE TABLE IF NOT EXISTS public.users
 
    (id SERIAL PRIMARY KEY,
    user_id VARCHAR(100) NOT NULL,
-   name VARCHAR(100) NOT NULL,
    pending_message JSONB DEFAULT '[]'::JSONB
 
     )`;
@@ -109,7 +105,6 @@ async function create_users_table(){
 
 
 }
-
 
 
 async function read_users(){
@@ -135,9 +130,12 @@ async function read_users(){
 
 
 
-async function add_user(data){
+async function add_user(user_id){
 
   const client = await fastify.pg.connect()
+
+
+  console.log("ajout du nouvelle user  : ",user_id)
 
  
 
@@ -145,11 +143,14 @@ async function add_user(data){
   try{
 
 
-    const add_user_query = `INSERT INTO public.users (user_id,name) VALUES ($1,$2) RETURNING *;`
+    const add_user_query = `INSERT INTO public.users (user_id) VALUES ($1) RETURNING *;`
 
-    const values=[data.user_id,data.name]
+    const values=[user_id]
 
     const result = await client.query(add_user_query,values)
+
+
+    console.log("resultat de l'ajout du nouvelle user : ",user_id," ",result.rows[0])
 
     return result.rows[0]
 
@@ -214,11 +215,24 @@ async function getPendingMessage(user_id){
 
   try{
 
+    console.log("recupération du pending_message de user_id ,",user_id)
+
+    const queryUserIdExist = `SELECT user_id FROM public.users WHERE user_id = $1`
+
+    const request = await client.query(queryUserIdExist,[user_id])
+
+    const checkUserId = request.rows[0]
+
+    if(!checkUserId){
+
+      console.log("nouveau user connecter : création d'un nouvealle enregistrement pour cette user : ",user_id)
+
+      await add_user(user_id)
+    }
+
     const queryGetPendingMessage = `SELECT pending_message FROM public.users WHERE user_id = $1`
 
     const result = await client.query(queryGetPendingMessage,[user_id])
-
-
 
     return result.rows[0]?.pending_message || [];
 
@@ -293,6 +307,7 @@ async function dropTable(){
 
 } 
 
+
 /*
 setTimeout(async ()=>{
   const result = await read_users()
@@ -304,7 +319,10 @@ setTimeout(async ()=>{
 */
 
 
+
+
 //creation de la tabler users 
+
 
 
 /*
@@ -315,11 +333,7 @@ await dropTable()
 await create_users_table()
 
 },1000)
-
 */
-
-
-
 
 //ajout d'un user 
 
@@ -435,20 +449,12 @@ io.on('connection',async (socket)=>{
   
   async function send_pending_msg(user_id){
 
-    
-
-    if(user_id==='0'){
-      console.log("ce user est nouveau : ",user_id)
-      return
-    }
-
-    
     const pending_msg_list = await getPendingMessage(user_id)
 
-    console.log("pending_msg_list pour  : ",pending_msg_list," name : ",user_name)
+    //console.log("pending_msg_list ",pending_msg_list)
 
     if (pending_msg_list.length !== 0) {
-        console.log("pending_msg_list non vide ", pending_msg_list," name : ",user_name);
+        //console.log("pending_msg_list non vide ", pending_msg_list," name : ",user_name);
 
         for (const msg of pending_msg_list) {
           socket.emit("message_from_server", msg); // ✅ un seul message à la fois
@@ -459,29 +465,19 @@ io.on('connection',async (socket)=>{
 
 
     else{
-      console.log("pas de messages pour user_name ",user_name)
+      console.log("pas de messages pour cette sender_id : " ,user_id)
     }
   }
   
 
   let user_id = socket.handshake.auth.user_id
 
-  let user_name = socket.handshake.auth.user_name
-
-
   //console.log("voici user_id : ",user_id)
-
 
   const sid = socket.id
 
-  if(user_id && user_id!==0){
-
-    userSocketMap.set(user_id,sid)
-    
-    //console.log("voici le userSocketMap : ",userSocketMap)
-  
-  }
-
+  userSocketMap.set(user_id,sid)
+ 
 
   socket.on("virus",(message,callback)=>{
     //console.log("voici le message du client : ",message)
@@ -489,23 +485,17 @@ io.on('connection',async (socket)=>{
     callback("je suis le backend via socket : ",)
   })
 
+  
+ 
+
+
+
   await send_pending_msg(user_id)
 
 
-  socket.on("register",async(data)=>{
-    
-    console.log("nouveau donnée envoyé par le user : ",data)
-    
-    const result = await add_user(data)
-
-    console.log("result : ",result)
-
-    user_id = data.user_id
-
-    userSocketMap.set(user_id,sid)
-
-
-
+  socket.on('register',async (name)=>{
+    console.log("name : ",name)
+    await add_user(name)
 
   })
 
