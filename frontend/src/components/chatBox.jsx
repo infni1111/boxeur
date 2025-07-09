@@ -324,7 +324,7 @@ const Bottom = ()=>{
 			const updateProfile = {...prev[id],messages:[...prev[id]["messages"],token]}
 
 
-			localStorage.setItem('profileObject',JSON.stringify{newObject})
+			localStorage.setItem('profileObject',JSON.stringify(newObject))
 
 			return newObject
 		})
