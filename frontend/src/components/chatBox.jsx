@@ -317,11 +317,13 @@ const Bottom = ()=>{
 		setProfileObject(prev=>{
 			const updatePrev = {...prev}
 
+			const updateProfile = {...prev[id],messages:[...prev[id]["messages"],token]}
+
+
+			
 			const newObject = {...prev,
 
 				[id]:updateProfile}
-
-			const updateProfile = {...prev[id],messages:[...prev[id]["messages"],token]}
 
 
 			localStorage.setItem('profileObject',JSON.stringify(newObject))
